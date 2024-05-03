@@ -1,0 +1,34 @@
+version: "3"
+services:
+  inventory_service:
+    container_name: inventory_service
+    image: product-inventory-management-system
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres_database
+  postgres_database:
+      container_name: postgres_database
+      image: postgres:14-alpine
+      restart: always
+      expose:
+        - "5431"
+      ports:
+        - "5431:5431"
+      command: -p 5431
+      environment:
+        POSTGRES_DB: product_inventory
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: root
+        PGDATA: /data/postgres
+      volumes:
+          - product_inventory_postgres:/data/postgres
+
+volumes:
+  product_inventory_postgres:
+    external: false

@@ -1,0 +1,9 @@
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": ["node_modules", "src/**/*.spec.js", "coverage", "dist"],
+  "exec": "node --env-file=./env/.local.env ./src/app.js",
+  "env": {
+    "NODE_ENV": "local"
+  }
+}

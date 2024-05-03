@@ -1,6 +1,7 @@
 // index.js
 const { Umzug, SequelizeStorage } = require('umzug');
 const Sequelize = require('sequelize');
+const logger = require('../helpers/Logger');
 
 class Migration {
   constructor(sequelize) {
@@ -26,9 +27,9 @@ class Migration {
   async up() {
     try {
       await this.umzug.up();
-      console.log('Database Migration  : postgres database migration has been executed successuly...');
-    } catch (e) {
-      console.error('Database Migration Error : postgres database migration error...', error);
+      logger.log('Database Migration  : postgres database migration has been executed successuly...');
+    } catch (error) {
+      logger.error('Database Migration Error : postgres database migration error...', error);
     }
   }
 }

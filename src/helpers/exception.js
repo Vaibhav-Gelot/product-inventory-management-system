@@ -1,6 +1,6 @@
 const errorTypes = require('./errorTypes');
+const logger = require('./Logger');
 
-('');
 class Exception extends Error {
   constructor(name, message) {
     super(message);
@@ -34,7 +34,7 @@ class Exception extends Error {
   }
 
   static handleError(error) {
-    console.error(error);
+    logger.error(error);
   }
 }
 module.exports = Exception;

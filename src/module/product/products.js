@@ -31,7 +31,6 @@ class Products {
       const data = await productSQLModel.addProduct({ name, supplier_id, price, stock_quantity });
       res.sendResponse({ data });
     } catch (error) {
-      console.log(error);
       res.sendError({ error: Exception.getExcetion(error, 'error while adding product.') });
     }
   }

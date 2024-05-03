@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const logger = require('../helpers/Logger');
 
 class PostgreSQL {
   async init({ host, port, user, password, database }) {
@@ -19,19 +20,19 @@ class PostgreSQL {
   async connectDBs() {
     try {
       await this.sequelize.authenticate();
-      console.log('Postgres : Connection has been established successfully.');
+      logger.log('Postgres : Connection has been established successfully.');
       return this.sequelize;
     } catch (error) {
-      console.error('Database Error : postgres database connection error...', error);
+      logger.error('Database Error : postgres database connection error...', error);
     }
   }
 
   async disconnectDBs() {
     try {
       await this.sequelize.close();
-      console.log('Database : postgres database disconnected...');
+      logger.log('Database : postgres database disconnected...');
     } catch (error) {
-      console.error('Database Error : postgres database disconnection error...', error);
+      logger.error('Database Error : postgres database disconnection error...', error);
     }
   }
 }

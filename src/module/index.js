@@ -1,12 +1,14 @@
 const utils = require('../utils/utils');
-const responseHandler = require('../helpers/responseHandler');
+const { responseHandler, requestHandler } = require('../helpers/handlerReqRes');
 const postgres = require('../db/postgres');
 const Migration = require('../db/migrationRunner');
+const logger = require('../helpers/Logger');
 
 class Module {
   constructor(app, port) {
     this.app = app;
     this.port = port;
+    this.app.use(requestHandler);
     this.app.use(responseHandler);
     this.app.get('/', (req, res) => res.sendResponse({ data: 'Product Inventory Service Listening you!!....' }));
   }
@@ -20,7 +22,7 @@ class Module {
       new Instance(this.app);
     });
     this.wildCardRoute();
-    console.log('Server : Router registration done...');
+    logger.log('Server : Router registration done...');
   }
 
   wildCardRoute() {
@@ -29,7 +31,7 @@ class Module {
 
   async startServer() {
     this.server = this.app.listen(this.port, () => {
-      console.log(`"Product Inventory Service started : ${this.port}`);
+      logger.log(`"Product Inventory Service started : ${this.port}`);
     });
   }
 
@@ -48,13 +50,13 @@ class Module {
 
     this.registerRoutes();
     await this.startServer();
-    console.log('Server : App initialization done...');
+    logger.log('Server : App initialization done...');
   }
 
   async shutdownApp() {
     await postgres.disconnectDBs();
     await this.server.close((err) => {
-      console.log('Server : App shutdown complete...', err);
+      logger.log('Server : App shutdown complete...', err);
       process.exit(0);
     });
   }

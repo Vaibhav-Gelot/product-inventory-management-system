@@ -89,7 +89,7 @@
       - 📄 [Logger.js](src/helpers/Logger.js)
       - 📄 [errorTypes.js](src/helpers/errorTypes.js)
       - 📄 [exception.js](src/helpers/exception.js)
-      - 📄 [responseHandler.js](src/helpers/responseHandler.js)
+      - 📄 [handlerReqRes.js](src/helpers/handlerReqRes.js)
     - 📂 **module**
       - 📄 [index.js](src/module/index.js)
       - 📂 **product**

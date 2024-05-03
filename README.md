@@ -1,4 +1,45 @@
-# Product Management Inventory System
+# Product Inventory Management System
+
+## Routes
+
+#### Suppliers
+
+- Get Supplier
+
+  - GET http://localhost:3000/api/v1/suppliers/:id
+
+- Add Supplier
+  - POST http://localhost:3000/api/v1/suppliers
+
+#### Products
+
+- Get Product List
+
+  - GET http://localhost:3000/api/v1/products?price_from=:q1&price_to=:q2&supplier_name=:q3
+
+- Get Product
+
+  - GET http://localhost:3000/api/v1/products/:id
+
+- Add Product
+
+  - POST http://localhost:3000/api/v1/products/
+
+- Upadate Product
+
+  - PUT http://localhost:3000/api/v1/products/:id
+
+- Delete Product
+
+  - DELETE http://localhost:3000/api/v1/products/:id
+
+- Increment Product Stock
+
+  - PUT http://localhost:3000/api/v1/products/:id/stock/:qty/increment
+
+- Decrement Product Stock
+
+  - PUT http://localhost:3000/api/v1/products/:id/stock/:dty/decrement
 
 ## Run command
 
@@ -19,11 +60,11 @@
 
 ## Assumtion
 
-- Each Iteam has only on supplier.
+- Each Product has only on supplier.
 
 ## Project Structure
 
-- 📂 \product\-inventory\-management\-system\_
+- 📂 \product\-inventory\-management\-system
   - 📄 [Dockerfile](Dockerfile)
   - 📄 [README.md](README.md)
   - 📄 [docker\-compose.yml](docker-compose.yml)

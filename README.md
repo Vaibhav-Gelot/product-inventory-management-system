@@ -3,6 +3,10 @@
 ## Note 
 - Simple No Auth inventory management service project.
 
+## Assumtion
+
+- Each Product has only on supplier.
+
 ## Routes
 
 #### Suppliers
@@ -60,10 +64,6 @@
 ```bash
  1  docker-compose up
 ```
-
-## Assumtion
-
-- Each Product has only on supplier.
 
 ## Project Structure
 

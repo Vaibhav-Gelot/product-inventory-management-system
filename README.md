@@ -1,5 +1,8 @@
 # Product Inventory Management System
 
+## Note 
+- Simple No Auth inventory management service project.
+
 ## Routes
 
 #### Suppliers

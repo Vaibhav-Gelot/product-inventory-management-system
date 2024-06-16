@@ -88,6 +88,24 @@ class Auth {
       res.sendError({ error: Exception.getExcetion(error, 'error while login.') });
     }
   }
+
+  async refreshAccessToken(req, res) {
+    try {
+      const { refreshToken } = req.body;
+
+      const decoded = JWT.verifyRefreshToken({ token: refreshToken });
+
+      if (!decoded || validation.isEmpty(decoded)) {
+        throw new Exception('Unauthorized', 'Refresh Token Invalid');
+      }
+
+      const { id, username } = decoded;
+      const accessToken = JWT.generatAccessToken({ payload: { id, username } });
+      res.sendResponse({ data: { accessToken } });
+    } catch (error) {
+      res.sendError({ error: Exception.getExcetion(error, 'error while refreshing access token.') });
+    }
+  }
 }
 
 module.exports = new Auth();

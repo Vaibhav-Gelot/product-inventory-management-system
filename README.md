@@ -1,5 +1,12 @@
 # Product Inventory Management System
 
+## Note 
+- Simple No Auth inventory management service project.
+- Inprogess : Auth -> comming soon
+## Assumtion
+
+- Each Product has only on supplier.
+
 ## Routes
 
 #### Suppliers
@@ -57,10 +64,6 @@
 ```bash
  1  docker-compose up
 ```
-
-## Assumtion
-
-- Each Product has only on supplier.
 
 ## Project Structure
 

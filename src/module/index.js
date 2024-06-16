@@ -1,8 +1,9 @@
+const { InstanceError } = require('sequelize');
 const utils = require('../utils/utils');
-const { responseHandler, requestHandler } = require('../helpers/handlerReqRes');
+const { responseHandler, requestHandler } = require('../helpers/handler');
 const postgres = require('../db/postgres');
 const Migration = require('../db/migrationRunner');
-const logger = require('../helpers/Logger');
+const logger = require('../helpers/logger');
 
 class Module {
   constructor(app, port) {
@@ -19,8 +20,11 @@ class Module {
       // eslint-disable-next-line global-require, import/no-dynamic-require
       const Instance = require(controllerPath);
       // eslint-disable-next-line no-new
-      new Instance(this.app);
+      const instance = new Instance(this.app);
+
+      logger.log(`Route registed : ${instance.constructor.name}`);
     });
+
     this.wildCardRoute();
     logger.log('Server : Router registration done...');
   }

@@ -1,10 +1,10 @@
 const errorTypes = require('./errorTypes');
-const logger = require('./Logger');
+const logger = require('./logger');
 
 class Exception extends Error {
   constructor(name, message) {
     super(message);
-    this.name = errorTypes.hasOwnProperty(name) ? name : errorTypes.UnknownError.name;
+    this.name = Object.prototype.hasOwnProperty.call(errorTypes, name) ? name : errorTypes.UnknownError.name;
     this.status = errorTypes[this.name].status;
     this.message = message;
   }

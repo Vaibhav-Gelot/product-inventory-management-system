@@ -1,10 +1,11 @@
 // TODO Logging
-const logger = require('./Logger');
+const logger = require('./logger');
 
 const requestHandler = (req, res, next) => {
-  logger.log(` ${req.method} ${req.url}`);
+  logger.log(`${req.method} ${req.url}`);
   next();
 };
+
 const responseHandler = (req, res, next) => {
   res.sendResponse = ({ data }) => {
     const resJson = { success: true, data };

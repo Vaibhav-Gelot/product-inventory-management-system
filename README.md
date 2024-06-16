@@ -103,3 +103,7 @@
     - 📂 **utils**
       - 📄 [utils.js](src/utils/utils.js)
       - 📄 [validation.js](src/utils/validation.js)
+
+## Dev CMD
+
+- Creaate Migration -> `npx sequelize-cli migration:create --name users`

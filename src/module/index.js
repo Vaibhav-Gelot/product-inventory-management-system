@@ -1,6 +1,5 @@
-const { InstanceError } = require('sequelize');
 const utils = require('../utils/utils');
-const { responseHandler, requestHandler } = require('../helpers/handler');
+const { requestParser, responseBuilder } = require('../middleware/index');
 const postgres = require('../db/postgres');
 const Migration = require('../db/migrationRunner');
 const logger = require('../helpers/logger');
@@ -9,8 +8,8 @@ class Module {
   constructor(app, port) {
     this.app = app;
     this.port = port;
-    this.app.use(requestHandler);
-    this.app.use(responseHandler);
+    this.app.use(requestParser);
+    this.app.use(responseBuilder);
     this.app.get('/', (req, res) => res.sendResponse({ data: 'Product Inventory Service Listening you!!....' }));
   }
 

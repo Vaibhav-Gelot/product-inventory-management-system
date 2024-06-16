@@ -1,12 +1,6 @@
-// TODO Logging
-const logger = require('./logger');
+const logger = require('../helpers/logger');
 
-const requestHandler = (req, res, next) => {
-  logger.log(`${req.method} ${req.url}`);
-  next();
-};
-
-const responseHandler = (req, res, next) => {
+const responseBuilder = (req, res, next) => {
   res.sendResponse = ({ data }) => {
     const resJson = { success: true, data };
     logger.log(`${req.method} ${req.originalUrl} : ${JSON.stringify(resJson)}`);
@@ -21,4 +15,5 @@ const responseHandler = (req, res, next) => {
 
   next();
 };
-module.exports = { requestHandler, responseHandler };
+
+module.exports = responseBuilder;

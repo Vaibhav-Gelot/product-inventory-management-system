@@ -10,7 +10,7 @@ class Exception extends Error {
   }
 
   // eslint-disable-next-line default-param-last
-  static getExcetion(error = new Error(), message) {
+  static getExcetion(error = new Error(), message, errorCode = '') {
     try {
       const { name } = error;
       // eslint-disable-next-line no-prototype-builtins
@@ -18,7 +18,7 @@ class Exception extends Error {
         return {
           name: error.name,
           message: error.message,
-          status: error.status,
+          status: errorCode || error.status,
         };
       }
 
@@ -28,7 +28,7 @@ class Exception extends Error {
       return {
         name: e.name,
         message: e.message,
-        status: e.status,
+        status: errorCode || e.status,
       };
     }
   }

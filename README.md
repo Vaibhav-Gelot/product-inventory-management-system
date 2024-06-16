@@ -2,7 +2,7 @@
 
 ## Note 
 - Simple No Auth inventory management service project.
-
+- Inprogess : Auth -> comming soon
 ## Assumtion
 
 - Each Product has only on supplier.

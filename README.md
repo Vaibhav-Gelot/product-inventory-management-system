@@ -1,8 +1,8 @@
 # Product Inventory Management System
 
 ## Note 
-- Simple No Auth inventory management service project.
-- Inprogess : Auth -> comming soon
+- Auth -> JWT Token Based -> InProgess
+  
 ## Assumtion
 
 - Each Product has only on supplier.

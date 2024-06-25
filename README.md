@@ -1,7 +1,22 @@
 # Product Inventory Management System
 
+##About 
+- Building a service that can allow suppliers to manage their products on marketplace.
+
 ## Note 
-- Auth -> JWT Token Based -> InProgess
+- Auth :
+  - JWT Token Based Auth for login/signup : ✔️
+  - Manage refresh token with server-side(redis) to improve security : 🕒    
+- Suppliers :
+  - Add/Get supplier API : ✔️
+- Products :
+  -  CRUD Operation on products : ✔️
+  -  Qty up/down with transaction controls : ✔️
+ - CI/CD & Monitoring :
+   - add docker for deployment services : ✔
+   - monitoring tools -> elk-stack, grafana, : 🕒
+
+ - Phase - 2 : cooming soon...   
   
 ## Assumtion
 

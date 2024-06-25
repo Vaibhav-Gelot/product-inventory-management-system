@@ -1,6 +1,6 @@
 # Product Inventory Management System
 
-##About 
+## About 
 - Building a service that can allow suppliers to manage their products on marketplace.
 
 ## Note 

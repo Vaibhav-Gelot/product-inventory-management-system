@@ -1,7 +1,8 @@
 const utils = require('../utils/utils');
 const { requestParser, responseBuilder } = require('../middleware/index');
 const postgres = require('../db/postgres');
-const Migration = require('../db/migrationRunner');
+const redisDB = require('../db/redis');
+const Migration = require('../db/postgres/migrationRunner');
 const logger = require('../helpers/logger');
 
 class Module {
@@ -39,17 +40,24 @@ class Module {
   }
 
   async initApp() {
-    const dbConfig = {
+    // posgres
+    const psqlDBConfig = {
       host: process.env.POSTGRESQL_DB_HOST,
       port: process.env.POSTGRESQL_DB_PORT,
       user: process.env.POSTGRESQL_DB_USER,
       password: process.env.POSTGRESQL_DB_PASSWORD,
       database: process.env.POSTGRESQL_DB_DATABASE,
     };
-    await postgres.init(dbConfig);
+    await postgres.init(psqlDBConfig);
     global.dbConnection = await postgres.connectDBs();
     const migration = new Migration(global.dbConnection);
     await migration.up();
+
+    // Redis
+    // if (process.env.NODE_ENV !== 'local') {
+    //   redisDB.init();
+    //   global.redisConnection = await redisDB.connectDB();
+    // }
 
     this.registerRoutes();
     await this.startServer();
@@ -57,7 +65,11 @@ class Module {
   }
 
   async shutdownApp() {
-    await postgres.disconnectDBs();
+    if (process.env.NODE_ENV !== 'local') {
+      await postgres.disconnectDBs();
+    }
+
+    await redisDB.disconnectDB();
     await this.server.close((err) => {
       logger.log('Server : App shutdown complete...', err);
       process.exit(0);

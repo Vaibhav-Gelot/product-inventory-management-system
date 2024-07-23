@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const logger = require('../helpers/Logger');
+const logger = require('../../helpers/logger');
 
 class PostgreSQL {
   async init({ host, port, user, password, database }) {

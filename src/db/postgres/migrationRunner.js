@@ -1,7 +1,7 @@
 // index.js
 const { Umzug, SequelizeStorage } = require('umzug');
 const Sequelize = require('sequelize');
-const logger = require('../helpers/logger');
+const logger = require('../../helpers/logger');
 
 class Migration {
   constructor(sequelize) {

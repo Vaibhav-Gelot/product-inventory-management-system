@@ -1,4 +1,4 @@
-const PSQLModel = require('../../db/psqlModel');
+const PSQLModel = require('../../db/postgres/psqlModel');
 
 class AuthSQLModel extends PSQLModel {
   constructor() {

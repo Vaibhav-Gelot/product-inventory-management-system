@@ -12,6 +12,7 @@ services:
       NODE_ENV: development
     depends_on:
       - postgres_database
+      - redis_database
   postgres_database:
       container_name: postgres_database
       image: postgres:14-alpine
@@ -28,7 +29,20 @@ services:
         PGDATA: /data/postgres
       volumes:
           - product_inventory_postgres:/data/postgres
-
+  redis_database:
+      container_name: redis_database
+      image: redis:alpine
+      restart: always
+      expose:
+        - "6379"
+      ports:
+        - "6379:6379"
+      command: redis-server --save 20 1 --loglevel warning
+      volumes:
+          - ./etc/redis/redis.conf:/etc/redis/redis.conf
+          - product_inventory_redis:/data
 volumes:
   product_inventory_postgres:
+    external: false
+  product_inventory_redis:
     external: false

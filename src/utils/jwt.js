@@ -7,7 +7,7 @@ class JWT {
 
   static verifyAccessToken({ token, secret = process.env.JWT_ACCESS_TOKEN_SECRET, algorithm = process.env.JWT_TOEKN_ENCRYPTION_ALGO }) {
     try {
-      const res = jwt.verify(token, secret, { algorithm });
+      const res = jwt.verify(token, secret,{algorithm});
       return res;
     } catch (error) {
       return null;

@@ -1,5 +1,4 @@
-const { error } = require('winston');
-const PSQLModel = require('../../db/psqlModel');
+const PSQLModel = require('../../db/postgres/psqlModel');
 
 class ProductsSQLModel extends PSQLModel {
   constructor() {

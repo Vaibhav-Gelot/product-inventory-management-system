@@ -1,4 +1,4 @@
-const { createClient } = require('redis');
+const redis = require('redis');
 const logger = require('../../helpers/logger');
 
 class RedisDB {
@@ -7,28 +7,44 @@ class RedisDB {
   }
 
   init() {
-    this.client = createClient({
-      host: process.env.REDIS_DB_HOST,
-      port: process.env.REDIS_DB_PORT,
-      db: process.env.REDIS_DB_DATABASE,
+    this.client = redis.createClient({
+      socket: {
+        host: process.env.REDIS_DB_HOST,
+        port: Number(process.env.REDIS_DB_PORT),
+      },
+    });
+
+    this.client.on('connect', () => {
+      console.log('Connected to Redis');
+    });
+    this.client.on('error', (error) => {
+      console.error('Redis error:', error);
     });
   }
 
   // eslint-disable-next-line consistent-return
   async connectDB() {
+    if (this.client && this.client.isOpen) {
+      logger.info('Redis : Connection already established.');
+      return this.client;
+    }
     try {
       await this.client.connect();
-      logger.log('Redis : Connection has been established successfully.');
+      logger.info('Redis : Connection has been established successfully.');
+      this.client.set('hello', 'wloe');
       return this.client;
     } catch (error) {
+      console.error(error);
       logger.error('Database Error : redis database connection error...', error);
     }
   }
 
   async disconnectDB() {
     try {
-      await this.client.disconnect();
-      logger.log('Redis : Database connection disconnected...');
+      if (this.client && this.client.isOpen) {
+        await this.client.disconnect();
+        logger.info('Redis : Database connection disconnected...');
+      }
     } catch (error) {
       logger.error('Database Error : redis database disconnection error...', error);
       throw error;

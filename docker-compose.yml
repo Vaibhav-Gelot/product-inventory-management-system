@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   inventory_service:
     container_name: inventory_service
@@ -8,41 +9,121 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - ./logs:/home/product-inventory-management-system/logs
     environment:
-      NODE_ENV: development
+      - NODE_ENV=development
     depends_on:
-      - postgres_database
-      - redis_database
+      postgres_database:
+        condition: service_healthy
+      redis_database:
+        condition: service_healthy
+      # - filebeat
+      # - elasticsearch
+      # - logstash
+      # - kibana
+    networks:
+      - inventory-service-network
   postgres_database:
-      container_name: postgres_database
-      image: postgres:14-alpine
-      restart: always
-      expose:
-        - "5431"
-      ports:
-        - "5431:5431"
-      command: -p 5431
-      environment:
-        POSTGRES_DB: product_inventory
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: root
-        PGDATA: /data/postgres
-      volumes:
-          - product_inventory_postgres:/data/postgres
+    container_name: postgres_database
+    image: postgres:14-alpine
+    restart: always
+    expose:
+      - "5431"
+    ports:
+      - "5431:5431"
+    command: -p 5431
+    environment:
+      - POSTGRES_DB=product_inventory
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - PGDATA=/data/postgres
+    volumes:
+      - product_inventory_postgres:/data/postgres
+    networks:
+      - inventory-service-network
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 5431"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
   redis_database:
-      container_name: redis_database
-      image: redis:alpine
-      restart: always
-      expose:
-        - "6379"
-      ports:
-        - "6379:6379"
-      command: redis-server --save 20 1 --loglevel warning
-      volumes:
-          - ./etc/redis/redis.conf:/etc/redis/redis.conf
-          - product_inventory_redis:/data
+    container_name: redis_database
+    image: redis:alpine
+    restart: always
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_MAXMEMORY=256mb
+    volumes:
+      - ./config/redis/redis.conf:/etc/redis/redis.conf
+      - product_inventory_redis:/data
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    networks:
+      - inventory-service-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+  # filebeat:
+  #   image: docker.elastic.co/beats/filebeat:7.10.2
+  #   volumes:
+  #     - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml
+  #     - ./logs:/home/product-inventory-management-system/logs:ro
+  #   command: filebeat -e -strict.perms=false
+  #   depends_on:
+  #     - elasticsearch
+  #     - kibana
+
+  # elasticsearch:
+  #   image: elasticsearch:7.10.1
+  #   environment:
+  #     - discovery.type=single-node
+  #   expose:
+  #     - "9200"
+  #   ports:
+  #     - "9200:9200"
+  #   volumes:
+  #     - es-data:/usr/share/elasticsearch/data
+
+  # logstash:
+  #   image: logstash:7.10.1
+  #   links:
+  #     - elasticsearch
+  #   environment:
+  #     - xpack.monitoring.enabled=true
+  #     - xpack.security.enabled=true
+  #   ports:
+  #     - "5044:5044"
+  #   volumes:
+  #     - ./config/logstash.conf:/etc/logstash/conf.d/logstash.conf:ro
+  #     - ./config/logstash.yml:/etc/logstash/logstash.yml:ro
+  #   depends_on:
+  #     - elasticsearch
+
+  # kibana:
+  #   image: kibana:7.10.1
+  #   links:
+  #     - elasticsearch
+  #   ports:
+  #     - "5601:5601"
+  #   volumes:
+  #     - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+  #   depends_on:
+  #     - elasticsearch
+
 volumes:
   product_inventory_postgres:
     external: false
   product_inventory_redis:
     external: false
+  es-data:
+    external: false
+networks:
+  inventory-service-network:
+    driver: bridge

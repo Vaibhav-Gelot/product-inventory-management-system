@@ -27,7 +27,7 @@ class Migration {
   async up() {
     try {
       await this.umzug.up();
-      logger.log('Database Migration  : postgres database migration has been executed successuly...');
+      logger.info('Database Migration  : postgres database migration has been executed successuly...');
     } catch (error) {
       logger.error('Database Migration Error : postgres database migration error...', error);
     }

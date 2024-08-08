@@ -20,7 +20,7 @@ class PostgreSQL {
   async connectDBs() {
     try {
       await this.sequelize.authenticate();
-      logger.log('Postgres : Connection has been established successfully.');
+      logger.info('Postgres : Connection has been established successfully.');
       return this.sequelize;
     } catch (error) {
       logger.error('Database Error : postgres database connection error...', error);
@@ -30,7 +30,7 @@ class PostgreSQL {
   async disconnectDBs() {
     try {
       await this.sequelize.close();
-      logger.log('Database : postgres database disconnected...');
+      logger.info('Database : postgres database disconnected...');
     } catch (error) {
       logger.error('Database Error : postgres database disconnection error...', error);
     }

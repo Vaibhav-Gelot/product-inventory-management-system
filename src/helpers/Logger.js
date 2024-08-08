@@ -1,4 +1,6 @@
 const winston = require('winston');
+const fs = require('fs');
+const path = require('path');
 
 const { combine, timestamp, printf, colorize, align } = winston.format;
 
@@ -14,11 +16,20 @@ class Logger {
         align(),
         printf((info) => `[${info.timestamp}] ${info.level} : ${info.message.trim()}`),
       ),
-      transports: [new winston.transports.Console()],
+      transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({
+          filename: path.join('logs', 'inventory-service.log'),
+          maxsize: 1024 * 1024 * 5, // 5MB
+          maxFiles: 5,
+          tailable: true,
+        }),
+      ],
+      exitOnError: false,
     });
   }
 
-  log(message) {
+  info(message) {
     this.logger.info(message);
   }
 

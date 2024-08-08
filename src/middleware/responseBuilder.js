@@ -3,7 +3,7 @@ const logger = require('../helpers/logger');
 const responseBuilder = (req, res, next) => {
   res.sendResponse = ({ data }) => {
     const resJson = { success: true, data };
-    logger.log(`${req.method} ${req.originalUrl} : ${JSON.stringify(resJson)}`);
+    logger.info(`${req.method} ${req.originalUrl} : ${JSON.stringify(resJson)}`);
     res.status(200).json(resJson);
   };
 

@@ -22,11 +22,11 @@ class Module {
       // eslint-disable-next-line no-new
       const instance = new Instance(this.app);
 
-      logger.log(`Route registed : ${instance.constructor.name}`);
+      logger.info(`Route registed : ${instance.constructor.name}`);
     });
 
     this.wildCardRoute();
-    logger.log('Server : Router registration done...');
+    logger.info('Server : Router registration done...');
   }
 
   wildCardRoute() {
@@ -35,11 +35,11 @@ class Module {
 
   async startServer() {
     this.server = this.app.listen(this.port, () => {
-      logger.log(`"Product Inventory Service started : ${this.port}`);
+      logger.info(`"Product Inventory Service started : ${this.port}`);
     });
   }
 
-  async initApp() {
+  async initDBs() {
     // posgres
     const psqlDBConfig = {
       host: process.env.POSTGRESQL_DB_HOST,
@@ -54,14 +54,18 @@ class Module {
     await migration.up();
 
     // Redis
-    // if (process.env.NODE_ENV !== 'local') {
-    //   redisDB.init();
-    //   global.redisConnection = await redisDB.connectDB();
-    // }
+    if (process.env.NODE_ENV !== 'local') {
+      console.log('process.env.NODE_ENV :', process.env.NODE_ENV);
+      redisDB.init();
+      global.redisConnection = await redisDB.connectDB();
+    }
+  }
 
+  async initApp() {
+    await this.initDBs();
     this.registerRoutes();
     await this.startServer();
-    logger.log('Server : App initialization done...');
+    logger.info('Server : App initialization done...');
   }
 
   async shutdownApp() {
@@ -71,7 +75,7 @@ class Module {
 
     await redisDB.disconnectDB();
     await this.server.close((err) => {
-      logger.log('Server : App shutdown complete...', err);
+      logger.info('Server : App shutdown complete...', err);
       process.exit(0);
     });
   }

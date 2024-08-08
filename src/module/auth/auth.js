@@ -64,6 +64,7 @@ class Auth {
       }
 
       const userExists = await AuthSQLModel.getUser({ username });
+      console.log(userExists)
       if (!userExists || validation.isEmpty(userExists)) {
         throw new Exception('ObjectNotFoundError', 'Invalid username or password.');
       }
@@ -77,8 +78,10 @@ class Auth {
       const refreshToken = JWT.generateRefreshToken({ payload: { id: userExists.id, username } });
 
       if (process.env.NODE_ENV !== 'local') {
-        logger.log(`${id}_${username}`);
-        redis.set(`${id}_${username}`, refreshToken);
+        logger.info(`${userExists.id}_${username}`);
+        // await global.redisConnection.set(`${userExists.id}_${username}`, refreshToken);
+        // const data = await global.redisConnection.get(`${userExists.id}_${username}`);
+        // logger.info(data);
       }
 
       const data = {

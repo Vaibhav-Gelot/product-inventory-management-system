@@ -1,14 +1,19 @@
 filebeat.inputs:
-  - type: docker
+  - type: log
     enabled: true
-    containers:
-      path: "/home/product-inventory-management-system/logs/*.log"
-      stream: "all"
-      ids:
-        - "inventory_service"
+    paths:
+      - /home/product-inventory-management-system/logs/*.log
 
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
-  index: "inventory-service"
-# output.logstash:
-#   hosts: ["logstash:5044"]
+  index: "inventory-service-logs"
+
+setup:
+  ilm:
+    enabled: false
+  template:
+    name: "inventory-service"
+    pattern: "inventory-service-*"
+    settings:
+      index.number_of_shards: 1
+      index.number_of_replicas: 1

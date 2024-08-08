@@ -13,17 +13,22 @@ services:
       - ./logs:/home/product-inventory-management-system/logs
     environment:
       - NODE_ENV=development
+    networks:
+      - inventory-service-network
     depends_on:
+      filebeat:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+      logstash:
+        condition: service_started
+      kibana:
+        condition: service_started
       postgres_database:
         condition: service_healthy
       redis_database:
         condition: service_healthy
-      # - filebeat
-      # - elasticsearch
-      # - logstash
-      # - kibana
-    networks:
-      - inventory-service-network
+
   postgres_database:
     container_name: postgres_database
     image: postgres:14-alpine
@@ -47,6 +52,15 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+    depends_on:
+      filebeat:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+      logstash:
+        condition: service_started
+      kibana:
+        condition: service_started
 
   redis_database:
     container_name: redis_database
@@ -69,53 +83,74 @@ services:
       interval: 1s
       timeout: 5s
       retries: 5
+    depends_on:
+      filebeat:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
+      logstash:
+        condition: service_started
+      kibana:
+        condition: service_started
 
-  # filebeat:
-  #   image: docker.elastic.co/beats/filebeat:7.10.2
-  #   volumes:
-  #     - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml
-  #     - ./logs:/home/product-inventory-management-system/logs:ro
-  #   command: filebeat -e -strict.perms=false
-  #   depends_on:
-  #     - elasticsearch
-  #     - kibana
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.10.2
+    volumes:
+      - ./config/elk_stack/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./logs:/home/product-inventory-management-system/logs:ro
+    command: filebeat -e -strict.perms=false
+    networks:
+      - inventory-service-network
+    depends_on:
+      elasticsearch:
+        condition: service_started
 
-  # elasticsearch:
-  #   image: elasticsearch:7.10.1
-  #   environment:
-  #     - discovery.type=single-node
-  #   expose:
-  #     - "9200"
-  #   ports:
-  #     - "9200:9200"
-  #   volumes:
-  #     - es-data:/usr/share/elasticsearch/data
+  elasticsearch:
+    image: elasticsearch:7.10.1
+    environment:
+      - discovery.type=single-node
+    expose:
+      - "9200"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    networks:
+      - inventory-service-network
 
-  # logstash:
-  #   image: logstash:7.10.1
-  #   links:
-  #     - elasticsearch
-  #   environment:
-  #     - xpack.monitoring.enabled=true
-  #     - xpack.security.enabled=true
-  #   ports:
-  #     - "5044:5044"
-  #   volumes:
-  #     - ./config/logstash.conf:/etc/logstash/conf.d/logstash.conf:ro
-  #     - ./config/logstash.yml:/etc/logstash/logstash.yml:ro
-  #   depends_on:
-  #     - elasticsearch
+  logstash:
+    image: logstash:7.10.1
+    links:
+      - elasticsearch
+    environment:
+      - xpack.monitoring.enabled=true
+      - xpack.security.enabled=true
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./config/elk_stack/logstash.conf:/etc/logstash/conf.d/logstash.conf:ro
+      - ./config/elk_stack/logstash.yml:/etc/logstash/logstash.yml:ro
+    networks:
+      - inventory-service-network
+    depends_on:
+      elasticsearch:
+        condition: service_started
 
-  # kibana:
-  #   image: kibana:7.10.1
-  #   links:
-  #     - elasticsearch
-  #   ports:
-  #     - "5601:5601"
-  #   volumes:
-  #     - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
-  #   depends_on:
-  #     - elasticsearch
+  kibana:
+    image: kibana:7.10.1
+    links:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./config/elk_stack/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    networks:
+      - inventory-service-network
+    depends_on:
+      elasticsearch:
+        condition: service_started
+      filebeat:
+        condition: service_started
 
 volumes:
   product_inventory_postgres:

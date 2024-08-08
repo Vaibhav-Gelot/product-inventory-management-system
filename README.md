@@ -1,23 +1,26 @@
 # Product Inventory Management System
 
-## About 
+## About
+
 - Building a service that can allow suppliers to manage their products on marketplace.
 
-## Note 
+## Note
+
 - Auth :
   - JWT Token Based Auth for login/signup : ✔️
-  - Manage refresh token with server-side(redis) to improve security : 🕒    
+  - Manage refresh token with server-side(redis) to improve security : 🕒
 - Suppliers :
   - Add/Get supplier API : ✔️
 - Products :
-  -  CRUD Operation on products : ✔️
-  -  Qty up/down with transaction controls : ✔️
- - CI/CD & Monitoring :
-   - add docker for deployment services : ✔
-   - monitoring tools -> elk-stack, grafana, : 🕒
+  - CRUD Operation on products : ✔️
+  - Qty up/down with transaction controls : ✔️
+- CI/CD & Monitoring :
 
- - Phase - 2 : cooming soon...   
-  
+  - add docker for deployment services : ✔
+  - monitoring tools -> elk-stack, grafana, : 🕒
+
+- Phase - 2 : cooming soon...
+
 ## Assumtion
 
 - Each Product has only on supplier.
@@ -85,8 +88,17 @@
 - 📂 \product\-inventory\-management\-system
   - 📄 [Dockerfile](Dockerfile)
   - 📄 [README.md](README.md)
+  - 📂 **config**
+    - 📂 **elk_stack**
+      - 📄 [filebeat.yml](config/elk_stack/filebeat.yml)
+      - 📄 [kibana.yml](config/elk_stack/kibana.yml)
+      - 📄 [logstash.conf](config/elk_stack/logstash.conf)
+      - 📄 [logstash.yml](config/elk_stack/logstash.yml)
+    - 📂 **redis**
+      - 📄 [redis.conf](config/redis/redis.conf)
   - 📄 [docker\-compose.yml](docker-compose.yml)
   - 📂 **env**
+  - 📂 **logs**
   - 📄 [node_modules](node_modules)
   - 📄 [nodemon.json](nodemon.json)
   - 📄 [package\-lock.json](package-lock.json)
@@ -96,19 +108,32 @@
   - 📂 **src**
     - 📄 [app.js](src/app.js)
     - 📂 **db**
-      - 📄 [migrationRunner.js](src/db/migrationRunner.js)
-      - 📂 **migrations**
-        - 📄 [20240502091402\-create\-products\-table.js](src/db/migrations/20240502091402-create-products-table.js)
-        - 📄 [20240502093005\-create\-suppliers\-table.js](src/db/migrations/20240502093005-create-suppliers-table.js)
-        - 📄 [20240502094033\-add\-suppliers\-products\-foreign\-key.js](src/db/migrations/20240502094033-add-suppliers-products-foreign-key.js)
-      - 📄 [postgres.js](src/db/postgres.js)
-      - 📄 [psqlModel.js](src/db/psqlModel.js)
+      - 📂 **postgres**
+        - 📄 [index.js](src/db/postgres/index.js)
+        - 📄 [migrationRunner.js](src/db/postgres/migrationRunner.js)
+        - 📂 **migrations**
+          - 📄 [20240502091402\-create\-products\-table.js](src/db/postgres/migrations/20240502091402-create-products-table.js)
+          - 📄 [20240502093005\-create\-suppliers\-table.js](src/db/postgres/migrations/20240502093005-create-suppliers-table.js)
+          - 📄 [20240502094033\-add\-suppliers\-products\-foreign\-key.js](src/db/postgres/migrations/20240502094033-add-suppliers-products-foreign-key.js)
+          - 📄 [20240616174429\-create\-users\-table.js](src/db/postgres/migrations/20240616174429-create-users-table.js)
+        - 📄 [psqlModel.js](src/db/postgres/psqlModel.js)
+      - 📂 **redis**
+        - 📄 [index.js](src/db/redis/index.js)
+        - 📄 [redisModel.js](src/db/redis/redisModel.js)
     - 📂 **helpers**
-      - 📄 [Logger.js](src/helpers/Logger.js)
       - 📄 [errorTypes.js](src/helpers/errorTypes.js)
       - 📄 [exception.js](src/helpers/exception.js)
-      - 📄 [handlerReqRes.js](src/helpers/handlerReqRes.js)
+      - 📄 [logger.js](src/helpers/logger.js)
+    - 📂 **middleware**
+      - 📄 [index.js](src/middleware/index.js)
+      - 📄 [requesrParser.js](src/middleware/requesrParser.js)
+      - 📄 [responseBuilder.js](src/middleware/responseBuilder.js)
+      - 📄 [validateAccessToken.js](src/middleware/validateAccessToken.js)
     - 📂 **module**
+      - 📂 **auth**
+        - 📄 [auth.controller.js](src/module/auth/auth.controller.js)
+        - 📄 [auth.js](src/module/auth/auth.js)
+        - 📄 [auth.sql.model.js](src/module/auth/auth.sql.model.js)
       - 📄 [index.js](src/module/index.js)
       - 📂 **product**
         - 📄 [products.controller.js](src/module/product/products.controller.js)
@@ -119,9 +144,12 @@
         - 📄 [suppliers.js](src/module/supplier/suppliers.js)
         - 📄 [suppliers.sql.model.js](src/module/supplier/suppliers.sql.model.js)
     - 📂 **utils**
+      - 📄 [constants.js](src/utils/constants.js)
+      - 📄 [jwt.js](src/utils/jwt.js)
       - 📄 [utils.js](src/utils/utils.js)
       - 📄 [validation.js](src/utils/validation.js)
 
 ## Dev CMD
 
 - Creaate Migration -> `npx sequelize-cli migration:create --name users`
+- Generate Project Structure -> `md-file-tree -e`

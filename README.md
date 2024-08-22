@@ -4,6 +4,13 @@
 
 - Building a service that can allow suppliers to manage their products on marketplace.
 
+## Tech Stack
+- Backend Languages/Technologies: Node.JS, JavaScript, Express.JS
+- API Protocols: Rest API
+- Databases: PostgreSQL, Redis
+- Monitoring Tools: Prometheus, Grafana, ELK Stack
+- Deployemnet Platform: Docker.
+
 ## Note
 
 - Auth :
